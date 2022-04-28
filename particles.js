@@ -1,20 +1,22 @@
+/*
+
 particlesJS("particles", {
   "particles": {
     "number": {
-      "value": 20,
+      "value": 16,
       "density": {
         "enable": true,
         "value_area": 800
       }
     },
     "color": {
-      "value": "#ffffff"
+      "value": "#75788c"
     },
     "shape": {
       "type": "circle",
       "stroke": {
         "width": 0,
-        "color": "#000000"
+        "color": "#1b4cec"
       },
       "polygon": {
         "nb_sides": 5
@@ -36,7 +38,7 @@ particlesJS("particles", {
       }
     },
     "size": {
-      "value": 3,
+      "value": 2,
       "random": true,
       "anim": {
         "enable": false,
@@ -111,7 +113,7 @@ particlesJS("particles", {
 
 
 /* ---- stats.js config ---- */
-
+/*
 var count_particles, stats, update;
 stats = new Stats;
 stats.setMode(0);
@@ -129,3 +131,4 @@ update = function() {
   requestAnimationFrame(update);
 };
 requestAnimationFrame(update);
+*/
