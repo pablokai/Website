@@ -21,43 +21,44 @@
 
 <body>
 
-    <!--- 
-        
-    <div class = "loader">
+
+
+    <div class="loader">
         <img src="img/pr2.png">
         <div id="spinner"></div>
     </div>
 
-    -->
+
 
     <div class="overlay"></div>
-   <!-- <div id="particles"></div> -->
+    
     <div class="cursor"></div>
 
     <section class="sec1">
 
         <nav class="navbar">
-            <div class="logo"> <img src="img/pr2.png"> </div>
+            <div class="logo"> <img src="img/pr4.png"> </div>
             <ul class="items">
                 <input type="checkbox" id="checkbox_toggle">
 
-                <label for="checkbox_toggle" class="hamburger"> <img src="img/hamblue.png" /> <i
-                        class="fas fa-times fa-lg"></i> </label>
+                <label for="checkbox_toggle" class="hamburger"> <img src="img/hamblue.png" id="open-menu" /> <i
+                        class="fas fa-times fa-lg" id="close-menu"></i> </label>
                 <div class="menu">
-                    <li><a>About</a></li>
-                    <li><a>Projects</a></li>
-                    <li><a>Contact</a></li>
+                    <li><a href="#sec2" class="link-about">About</a></li>
+                    <li><a href="#sec4" class="link-projects">Projects</a></li>
+                    <li><a href="#sec5" class="link-contact">Contact</a></li>
                 </div>
             </ul>
         </nav>
 
         <div class="hometext">
 
+
             <span class="title-holder">
                 <h1 class="title-greet">Hi, </h1>
                 <span class="pronoun"></span>
                 <span class="title">
-                    I'm <span class="pablo">Pablo </span> Rodríguez
+                    I'm <span class="pablo">Pablo </span> <br> Rodríguez
                 </span>
                 <h2 class="subtitle">SOFTWARE DEVELOPER</h2>
                 <!--<h3 class="quote"> { I code for the future }</h3>-->
@@ -66,6 +67,9 @@
             </span>
 
 
+        </div>
+
+        <div class="mobilehome">
         </div>
         <div class="pic">
             <div class="block">
@@ -83,7 +87,6 @@
             <!--<video autoplay loop muted id="videoside">
             <source src="img/4tJ8.gif" type="video/gif"> 
         </video> -->
-            <div class="shape"></div>
             <div id="model"></div>
             <script type="importmap">
                 {
@@ -94,11 +97,7 @@
 
                 }
         </script>
-
             <div class="overlay"></div>
-
-            
-
             <script type="module">
 
                 import * as THREE from 'three';
@@ -113,45 +112,68 @@
                 import {UnrealBloomPass} from 'https://unpkg.com/three@0.138.0/examples/jsm/postprocessing/UnrealBloomPass.js';
                 import {GlitchPass} from 'https://unpkg.com/three@0.138.0/examples/jsm/postprocessing/GlitchPass.js';
                 import {BloomPass} from 'https://unpkg.com/three@0.138.0/examples/jsm/postprocessing/BloomPass.js';
+                import Stats from 'https://unpkg.com/three@0.138.0/examples/jsm/libs/stats.module.js';
     
-                let camera, scene, renderer, elementSize, mixer, clock, composer, object, container, intersects;
+                let tl;
+
+                let camera, scene, renderer, elementSize, mixer, clock, composer, object, container, intersects, stats;
                 let mouse = new THREE.Vector2();
 
 
                 /*MODEL 2*/    
 
-                let camera2, scene2, renderer2, elementSize2, mixer2, clock2, composer2, object2;
+                let camera2, scene2, renderer2, elementSize2, mixer2, clock2, composer2, object2, cube;
                 let mouse2 = new THREE.Vector2();
 
-                let delta2;
+               
 
-                /*MODEL 2 */
-    
-                //init();
-                //render();
+                window.addEventListener('load' , function() {
 
-                //init2();
-                //render2();
+                   
+                    if(window.innerWidth >= 800){
+                        document.querySelector(
+                        "body").style.visibility = "hidden";
+                    document.querySelector(
+                        ".loader").style.visibility = "visible";
+                        init();
+                        render();
+                        init2();
+                        render2();
+                    }else{
+                        document.querySelector(
+                                    ".loader").style.display = "none";
+                                    document.querySelector(
+                                    "body").style.visibility = "visible";
+                    }
 
-                console.log("Scene polycount:", renderer.info.render.triangles)
-            console.log("Active Drawcalls:", renderer.info.render.calls)
-            console.log("Textures in Memory", renderer.info.memory.textures)
-            console.log("Geometries in Memory", renderer.info.memory.geometries)
+                });
     
                         
                 function init() {
     
-                     container = document.getElementById( 'model' );
+                    container = document.getElementById( 'model' );
 
                     elementSize = document.querySelector( '.pic' );
     
-                    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 1000 );
+                    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 100 );
 
                     camera.position.set( -20, 1, -20 );
     
                     scene = new THREE.Scene();
 
-                    clock = new THREE.Clock();                  
+                    clock = new THREE.Clock();  
+                    
+                    renderer = new THREE.WebGLRenderer( { antialias: true , alpha: true} );
+                    renderer.setPixelRatio( window.devicePixelRatio );
+                    renderer.setSize( elementSize.clientWidth , elementSize.clientHeight );
+                    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    renderer.toneMappingExposure = 0.8;
+                    renderer.outputEncoding = THREE.sRGBEncoding;
+                    container.appendChild( renderer.domElement );
+
+                    const controls = new OrbitControls( camera, renderer.domElement );  
+                    controls.enableDamping = true;
+                    controls.update();
     
                     new RGBELoader()					
                         .load( 'bluetwo.hdr', function ( texture ) {
@@ -169,17 +191,28 @@
                                 object.castShadow = true; 
                                 object.receiveShadow = true;
                                 object.scale.set(12,12,12); //was 12 12 12
+                                object.position.set(-9, -5.5, 1);
 
-                                object.position.set(-9, -6.5, 1);
-
-                                scene.add( object ); 
+                               
 
                                 mixer = new THREE.AnimationMixer( object );
                                 var action = mixer.clipAction( gltf.animations[ 0 ] );
                                 action.play();
+
+                                scene.add( object ); 
                                 render();
-    
-                            } );
+
+                                },
+                                function ( xhr ) {
+
+                                   document.querySelector(
+                                    ".loader").style.display = "none";
+                                    document.querySelector(
+                                    "body").style.visibility = "visible";
+                                    startup();
+                                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+                                }, );
     
                         } );
     
@@ -201,17 +234,7 @@
                     directionalLight.position.set(-50, 4.6, -40 );  
                     directionalLight.castShadow = true;
                     scene.add(directionalLight);*/
-    
-                    renderer = new THREE.WebGLRenderer( { antialias: true , alpha: true} );
-                    renderer.setPixelRatio( window.devicePixelRatio );
-                    //renderer.autoClear = false;
-                    renderer.setSize( elementSize.clientWidth , elementSize.clientHeight );
-                    //renderer.setClearColor(0x000000, 0.0);
-                    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-                    renderer.toneMappingExposure = 0.8;
-                    renderer.outputEncoding = THREE.sRGBEncoding;
-                    container.appendChild( renderer.domElement );
-                   
+ 
                    /* const renderScene = new RenderPass( scene, camera );
                     const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ),
                     1.5, 0.4, 0.85 );
@@ -224,17 +247,16 @@
                     composer.addPass( renderScene );
                     composer.addPass( bloomPass );*/
 
-                    const controls = new OrbitControls( camera, renderer.domElement );  
-                    controls.update();
                     //window.addEventListener( 'resize', onWindowResize );
                     document.addEventListener('mousemove', addEvents, false);
+
+                    /*stats = new Stats();
+	                container.appendChild( stats.dom );*/
     
                 }
     
                 function onWindowResize() {
                    
-                    console.log(container.clientWidth , container.clientHeight);
-
                     camera.aspect = elementSize.clientWidth  / elementSize.clientHeight;
                     camera.updateProjectionMatrix();
 
@@ -253,7 +275,8 @@
 
                     if ( mixer ) mixer.update( delta );
                     renderer.render(scene, camera);
-                    //composer.render();                   
+                   // stats.update();
+                   
                 }
                 
                 function addEvents(event){
@@ -261,134 +284,190 @@
                     
                     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
                     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;     
-                    
+
                     if(object){
-                    object.position.set(mouse.x -9, -mouse.y - 6.5, 1);
+                        object.position.set(mouse.x -9, -mouse.y /2 -5.5 , 1);
                     }
 
                 }
 
+                function startup(){
+                    tl = gsap.timeline({
+                    repeat: 0,
+                    repeatDelay: 0
+                    });
 
-                /* ********************** MODEL 2  **********************************/
-                /* ********************** MODEL 2  **********************************/
-                /* ********************** MODEL 2  **********************************/
-         
+                    tl.to("#model", {
+                        x: -1500
+                    }, '-=3')
+                    /*  .to(".loader",  {x: 2000, duration: 1}, '-=0.5')*/
+                    .to(".title-holder", {
+                        y: -100
+                    }, '-=3')
+                    .to(".navbar", {
+                        y: -500
+                    }, '-=1')
+                    .to(".icons", {
+                        x: 500
+                    }, '-=1')
+                    .to(".square-one", {
+                        y: -1000
+                    }, '-=3')
+                    .to(".square-four", {
+                        y: 1000
+                    }, '-=3')
+                    .to(".square-two", {
+                        y: 1000
+                    }, '-=3')
+                    .to(".square-three", {
+                        x: 1500
+                    }, '-=3')
+                    .to("#model", {
+                        x: 0,
+                        scale: 1.1,
+                        duration: 2
+                    })
+                    .to("#model", {
+                        scale: 1,
+                        duration: 1
+                    })
+                    .to(".block", {
+                        y: 0,
+                        duration: 2
+                    }, '-=3')
+                    .to(".square-one", {
+                        y: 0,
+                        duration: 2
+                    }, '-=3')
+                    .to(".square-four", {
+                        y: 0,
+                        duration: 2
+                    }, '-=3')
+                    .to(".square-two", {
+                        y: 0,
+                        duration: 2
+                    }, '-=3')
+                    .to(".square-three", {
+                        x: 0,
+                        duration: 2
+                    }, '-=3')
+                    .to(".title-holder", {
+                        y: 0,
+                        duration: 0.5
+                    }, '-=3.5')
+                    .to(".navbar", {
+                        y: 0,
+                        duration: 2
+                    }, '-=3')
+                    .to(".icons", {
+                        x: 0,
+                        duration: 2
+                    }, '-=3');
+                }
 
+                            
             function init2() {
+            let container2 = document.querySelector( '.room-model' );
 
-                let container2 = document.querySelector( '.room-model' );
+            camera2 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 1000 );
+            camera2.position.set( 0, 0, 500);
 
-               /* document.body.appendChild( container2 );*/
-
-                camera2 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 1000 );
-                camera2.position.set( 0.3, 0.6, 5.5);
-
-                scene2 = new THREE.Scene();
-
-                clock2 = new THREE.Clock();
-
-                var directionalLight2 = new THREE.DirectionalLight(0x0011ff,1);
-                directionalLight2.position.set(0,3, 1);
-				directionalLight2.castShadow = true;
-				directionalLight2.shadow.bias =-0.001;
-
-                scene2.add(directionalLight2);
-
-                renderer2 = new THREE.WebGLRenderer( { /*antialias: true , alpha: true*/}  );
-                renderer2.shadowMap.enabled = true;
-                renderer2.setPixelRatio( window.devicePixelRatio );
-                renderer2.setSize( container2.clientWidth, container2.clientHeight );
-                renderer2.toneMapping = THREE.ACESFilmicToneMapping;
-                renderer2.toneMappingExposure = 1;
-                renderer2.outputEncoding = THREE.sRGBEncoding;
-                container2.appendChild( renderer2.domElement );
+            scene2 = new THREE.Scene();
+            scene2.background = new THREE.Color(0x090b11);
 
 
-                new RGBELoader()					
-                    .load( 'japannightlife.hdr', function ( texture ) {
+            clock2 = new THREE.Clock();
 
-                        texture.mapping = THREE.EquirectangularReflectionMapping;
-                        
-                        scene2.background = new THREE.Color(0x000000);
-                        scene2.environment = texture;
+                            const color = 0xfff;
+                            const intensity = 20;
+                            const plight = new THREE.PointLight(color, intensity);
+                            plight.position.set(200,200, 300);
+                            plight.castShadow = true;
 
-                        render2();
+                            scene2.add(plight);
 
-                        // model
+                            const helper2 = new THREE.PointLightHelper(plight);
+                            scene2.add(helper2);
 
-                        const loader = new GLTFLoader();
-                        loader.load( 'model2/scene.gltf', function ( gltf ) {
+                           /* const color2 = 0x000000;
+                            const intensity2 = 30;
+                            const plight2 = new THREE.PointLight(color, intensity);
+                            plight2.position.set(200,1000, 1000);
+                            plight2.castShadow = true;
 
-                            object2 = gltf.scene;	
-                            object2.traverse(function(o) {
-								if (o.isMesh) {
-									o.castShadow = true;
-									o.receiveShadow = true;
-									}
+                            scene2.add(plight2);*/
 
-								});
-                            object2.position.set(0.3, -0.5, 3);
-                            object2.scale.set(1, 1,1);
-                            object2.rotation.y += 0.1;
+                            const light2 = new THREE.AmbientLight( 0xffffff, 3); 
+                            scene2.add( light2 );	
 
-                            scene2.add( object2 );
+                            renderer2 = new THREE.WebGLRenderer( { antialias: true , alpha: true}  );
+                            renderer2.shadowMap.enabled = true;
+                            renderer2.setPixelRatio( window.devicePixelRatio );
+                            renderer2.setSize( container2.clientWidth, container2.clientHeight );
+                            container2.appendChild( renderer2.domElement );
 
-                        } );
 
-                    } );
-   
-              /* const renderScene2 = new RenderPass( scene2, camera2 );
-                composer2 = new EffectComposer( renderer2 );
-				composer2.addPass( renderScene2 );	*/
+                            var geometry = new THREE.SphereGeometry(150, 30, 32);
+                            /*var material = new THREE.MeshBasicMaterial({ color: 0x300cff});*/
 
-                /*const controls2 = new OrbitControls( camera2, renderer2.domElement );
-                controls2.addEventListener( 'change', render2 ); 
-                controls2.minDistance = 0;
-                controls2.maxDistance = Infinity;
-                controls2.target.set( 0, 0, - 0.2 );
-                controls2.minPolarAngle = 0; 
-                controls2.maxPolarAngle = Math.PI/2; 
-                controls2.minAzimuthAngle = Infinity; 
-                controls2.maxAzimuthAngle = Infinity; 
+                            var material = new THREE.ShaderMaterial({
+                            uniforms: {
+                                color1: {
+                                value: new THREE.Color(0x0004ff)
+                                },
+                                color2: {
+                                value: new THREE.Color(0x1a01a7)
+                                }
+                            },
+                            vertexShader: `
+                                varying vec2 vUv;
 
-                controls2.update();*/
-              //window.addEventListener( 'resize', onWindowResizeTwo );
-                document.addEventListener('mousemove', addEventsTwo, false);
-            }
+                                void main() {
+                                vUv = uv;
+                                gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+                                }
+                            `,
+                            fragmentShader: `
+                                uniform vec3 color1;
+                                uniform vec3 color2;
+                            
+                                varying vec2 vUv;
+                                
+                                void main() {
+                                
+                                gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+                                }
+                            `,
+                            wireframe: false
+                            });
 
-            function onWindowResizeTwo() {
+                            var materials = new THREE.MeshStandardMaterial(
+                            {color: 0x0004ff, metalness: 0.95, roughness: 0.2, wireframe: false});
 
-                camera2.aspect = window.innerWidth / window.innerHeight;
-                camera2.updateProjectionMatrix();
-                renderer2.setSize( window.innerWidth, window.innerHeight );
-
-                render2();
+                            cube = new THREE.Mesh(geometry, materials);
+                            scene2.add(cube);
+                            document.addEventListener('mousemove', addEventsTwo, false);
 
             }
-
 
             function render2() {
-				requestAnimationFrame( render2 );
-				renderer2.render( scene2, camera2 );
+                requestAnimationFrame( render2 );
 
-				//delta2 = clock2.getDelta();
+                cube.rotation.y += 0.01;
+                cube.rotation.x += 0.005;
+                renderer2.render( scene2, camera2 );
 
-				//if ( mixer ) mixer.update( delta );
-
-				//composer2.render(delta2);
-
-			}
-
-			function addEventsTwo(event){
-                event.preventDefault();                   
-                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;       
-                    
-                if(object2){
-				    object2.rotation.y = mouse.x / 5;	
-                }
             }
 
+            function addEventsTwo(event){
+                event.preventDefault();
+                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+                if(cube){
+                    cube.position.set(mouse.x * 15, -mouse.y * 10 , 1);
+                }
+            }
         
             </script>
         </div>
@@ -403,31 +482,33 @@
 
         </div>
 
-        <a href="mailto:rgpablocr@gmail.com">
-            <div class="email">
-                <i class="fa-solid fa-square-envelope fa-2x"></i>
-                <h1>Get in touch!</h1>
-                <h2>rgpablocr@gmail.com</h2>
-                <i class="fas fa-angle-right fa-2x" id="angle-right"></i>
-                <i class="fa-solid fa-arrow-right fa-2x" id="arrow-right"></i>
-                <div class="horizontal"></div>
-            </div>
-        </a>
+        <div class="email-box">
+            <a href="mailto:rgpablocr@gmail.com">
+                <div class="email">
+                    <i class="fa-solid fa-square-envelope fa-2x"></i>
+                    <h1>Get in touch!</h1>
+                    <h2>rgpablocr@gmail.com</h2>
+                    <i class="fas fa-angle-right fa-2x" id="angle-right"></i>
+                    <i class="fa-solid fa-arrow-right fa-2x" id="arrow-right"></i>
+                    <div class="horizontal"></div>
+                </div>
+            </a>
+        </div>
 
 
     </section>
 
     <section class="transition">
-        <div class="sparkle"> 
+        <div class="sparkle">
             <img src="img/spark.png">
         </div>
         <div class="part-one">
-          
+
             <h1 class="tran-one">WELC<img src="img/earth.png"><!-- <div class="glowing-ball"></div>  -->ME TO</h1>
         </div>
         <div class="part-two">
             <h1 class="tran-two">THE FUTURE</h1>
-        
+
         </div>
 
         <div class="arrow">
@@ -438,13 +519,10 @@
 
         <div class="divider">
             <div class="avatar">
-               <!-- <video autoplay loop muted id="videoside">
+                <video autoplay loop muted id="videoside">
                     <source src="img/04 pc.mp4" type="video/mp4">
-                </video>  -->
-
-                <img src="img/melt.png">
-
-                <div class="shape-about"></div>
+                </video>
+                <!-- <div class="shape-about"></div> -->
 
             </div>
 
@@ -460,14 +538,20 @@
                 <div class="line-about"></div>
                 <br>
                 <br>
-                I'm a software engineer from Costa Rica.
+                <p>
+                    I'm a software engineer from Costa Rica.
+                    <br>
+                    I use Javascript, C# and other technologies to create high quality software.
+                    I currently work as a <span>software developer intern </span> at Rossmon.
+                </p>
                 <br>
-                I use Javascript, C# and other technologies to create high quality software.
-                I currently work as a <span>software developer intern </span> at Rossmon.
-                <br>
-                <h2 class="about-quote">Be an innovator.</h2>
-                <br>
-                <i class="fa-solid fa-circle-arrow-up fa-4x"></i>
+                <div class="innovator">
+                    <h2 class="about-quote">Be an innovator.</h2>
+                    <br>
+                    <div class="about-icon">
+                        <i class="fa-solid fa-circle-arrow-up fa-4x"></i>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -485,11 +569,11 @@
         <div class="line"></div>
         <div class="skills-container">
             <div class="skill-item">
-                <div class="skill-one java">
+                <div class="skill-one java" id="java">
                     <img src="img/java.png">
                 </div>
             </div>
-            <div class="skill-item">
+            <div class="skill-item" id="skill-two-left">
                 <div class="skill-two sql">
                     <img src="img/sqlserver.png">
                 </div>
@@ -504,12 +588,12 @@
                 <div class="skill-three">
                     <img src="img/js.png">
                 </div>
-                <div class="skill-three">
+                <div class="skill-three html">
                     <img src="img/html.png">
                 </div>
             </div>
-            <div class="skill-item">
-                <div class="skill-two">
+            <div class="skill-item" id="skill-two-right">
+                <div class="skill-two flutter">
                     <img src="img/flutterv2.png">
                 </div>
                 <div class="skill-two csharp">
@@ -517,7 +601,7 @@
                 </div>
             </div>
             <div class="skill-item">
-                <div class="skill-one">
+                <div class="skill-one" id="android">
                     <img src="img/android.png">
                 </div>
             </div>
@@ -527,11 +611,11 @@
 
     <section class="sec4" id="sec4">
         <div class="title-projects">
-            <div class="part1">
-                <h1>Projects</h1>
+            <div class="part1-project">
+                <h1 id="projects-text">Projects</h1>
                 <img src="img/right-white.png">
             </div>
-            <div class="part2">
+            <div class="part2-project">
                 <div class="line-projects"></div>
                 <p>Some of the things I've built</p>
             </div>
@@ -539,25 +623,93 @@
         <div class="blue-circle"></div>
 
         <div class="cards">
-            <div class="card one"></div>
-            <div class="card two"></div>
-            <div class="card three"></div>
+            <div class="card one" id="card-one">
+                <div class="card-text">
+
+                    <div class="one">
+                        <h2>01</h2>
+                        <h1 class="card-title">CONTROL INTERNO</h1>
+                        <p class="card-description">A web app for managing Internal Controls in a company. 
+                            Multi-role based application, create and solve custom internal control evaluations over several company areas.
+                        </p>
+                    </div>
+                    <div class="two">
+                        <div class="card-tech">
+                            <img src="img/net.png">
+                            <img src="img/sqlserver.png">
+                            <img src="img/html.png">
+                        </div>
+                        <a href="https://github.com/pablokai/sys-controlinterno-webcuc">Visit project</a>
+                    </div>
+                </div>
+                <div class="card-image">
+                    <img class="project" src="img/internow.png">
+                    <img class="project" src="img/interno2.png">
+                </div>
+            </div>
+            <div class="card two" id="card-two">
+
+                <div class="card-image">
+                    <img class="project" src="img/uniabcw.png">
+                    <img class="project" src="img/uniabc.png">
+                </div>
+
+                <div class="card-text"  >
+                    <div class="one second">
+                        <h2>02</h2>
+                        <h1 class="card-title">UNIVERSIDAD ABC</h1>
+                        <p class="card-description">A mobile app for college attendance management and enrollment.
+                            Register your classes attendance, access over multiple courses and groups on the enrollment process.
+                        </p>
+                    </div>
+                    <div class="two second">
+                        <div class="card-tech">
+                            <img src="img/flutterv2.png">
+                            <img src="img/sqlserver.png">
+                        </div>
+                        <a href="https://github.com/pablokai/flutter_matricula">Visit project</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card three"  id="card-three">
+                <div class="card-text">
+                    <div class="one">
+                        <h2>03</h2>
+                        <h1 class="card-title">PREFIC</h1>
+                        <p class="card-description">A web app for managing the annual budget in Colegio Universitario de Cartago.
+                            Role-based application, direct every area budget, transfer and balance accounts.
+                        </p>
+                    </div>
+                    <div class="two">
+                        <div class="card-tech">
+                            <img src="img/PHP.png">
+                            <img src="img/mysql.png">
+                        </div>
+                        <a href="https://github.com/gguillencr/prefic-sys">Visit project</a>
+                    </div>
+                </div>
+                <div class="card-image">
+                    <img class="project" src="img/preficw.png">
+
+                    <img class="project" src="img/prefic.png">
+                </div>
+            </div>
         </div>
 
 
     </section>
 
-
-    <section class="sec5">
+    <!--- <div id="particles"></div> -->
+    <section class="sec5" id="sec5">
+       
         <div class="overlay-model">
-
-
             <div class="model-text">
 
                 <h1>Let's get <span> </span> in touch.</h1>
                 <div class="circle-contact"></div>
                 <div class="contact-side">
-                    <a class="btn-contact">
+                    <a class="btn-contact" href="">
                         <p> Contact Me </p> <i class="fa-solid fa-circle-arrow-up fa-3x"></i>
                     </a>
                     <div class="line-contact"></div>
@@ -595,7 +747,7 @@
 
 
                 <div class="powered">
-                    <h2>Made by Pablo Rodríguez</h2>
+                    <h2>© Code by Pablo Rodríguez</h2>
                 </div>
             </div>
         </div>
@@ -603,11 +755,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
-
     <script src="main.js"></script>
     <script src="particles.min.js"></script>
     <script src="particles.js"></script>
-
+    
+</body>
 </body>
 
 </html>

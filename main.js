@@ -1,26 +1,33 @@
 gsap.registerPlugin(ScrollTrigger);
 
 
-window.addEventListener('load', function () {
-  document.querySelector('body').classList.add("loaded")
-});
+/* MOBILE MENU CODE*/
+
+if (window.innerWidth <= 800) {
+
+  let menu = [document.querySelector('.link-about'), document.querySelector('.link-projects'), document.querySelector('.link-contact')];
+
+  menu.forEach(item =>
+    item.addEventListener('click', function () {
+      document.querySelector('.menu').style.display = 'none';
+      document.getElementById('close-menu').style.display = 'none';
+      document.getElementById('open-menu').style.display = 'block';
+      document.getElementById('checkbox_toggle').checked = false;
+      document.body.style.overflow = 'auto';
+    })
+  );
+
+  let menuToggle = document.getElementById('checkbox_toggle');
+
+  menuToggle.addEventListener('change', function () {
+    menuToggle.checked ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto';
+
+  });
+
+}else{
 
 
-var triangle = document.querySelector('.triangle');
-
-
-TweenMax.to('.cursor', 3, {
-  scale: 1,
-  ease: Power1.easeOut,
-  repeat: -1
-});
-
-//gsap.to(triangle, {rotation: 400, repeat: -1,  repeatDelay: 0});
-
-gsap.set('.cursor', {
-  xPercent: -50,
-  yPercent: -50
-});
+/* MOUSE CURSOR CODE */
 
 var mouseCursor = document.querySelector('.cursor');
 
@@ -31,101 +38,37 @@ window.addEventListener('mousemove', e => {
   });
 });
 
-var container = document.getElementById('model');
+/* LOADER AND STARTUP CODE */
+
+
+function hideT() {
+
+  gsap.to('.arrow', {
+    autoAlpha: 0
+  })
+  gsap.to('.sparkle', {
+    autoAlpha: 0
+  })
+}
+
+function hideAbout() {
+
+  gsap.to('.avatar', {
+    autoAlpha: 0
+  })
+  gsap.to('.about', {
+    autoAlpha: 0
+  })
+}
+
+/* TRANSITION SECTION CODE */
 
 gsap.to('.arrow', {
   autoAlpha: 0
-})
+});
 gsap.to('.sparkle', {
   autoAlpha: 0
-})
-
-var tl = gsap.timeline({
-  repeat: 0,
-  repeatDelay: 0
 });
-
-tl /*.to(".loader",  {duration: 2})*/
-  .to("#model", {
-    x: -1500
-  }, '-=2')
-  //.to(".loader",  {x: 2000, duration: 1}, '-=0.5')
-  .to(".title-holder", {
-    y: -100
-  }, '-=3')
-  .to(".navbar", {
-    y: -500
-  }, '-=1')
-  .to(".icons", {
-    x: 500
-  }, '-=1')
-  .to(".square-one", {
-    y: -1000
-  }, '-=1')
-  .to(".square-four", {
-    y: 1000
-  }, '-=1')
-  .to(".square-two", {
-    y: 1000
-  }, '-=1')
-  .to(".square-three", {
-    x: 1500
-  }, '-=1')
-  .to("#model", {
-    x: 0,
-    scale: 1.1,
-    duration: 2
-  })
-  .to("#model", {
-    scale: 1,
-    duration: 1
-  })
-  .to(".block", {
-    y: 0,
-    duration: 2
-  }, '-=3')
-  .to(".square-one", {
-    y: 0,
-    duration: 2
-  }, '-=3')
-  .to(".square-four", {
-    y: 0,
-    duration: 2
-  }, '-=3')
-  .to(".square-two", {
-    y: 0,
-    duration: 2
-  }, '-=3')
-  .to(".square-three", {
-    x: 0,
-    duration: 2
-  }, '-=3')
-  .to(".title-holder", {
-    y: 0,
-    duration: 0.5
-  }, '-=3.5')
-  .to(".navbar", {
-    y: 0,
-    duration: 2
-  }, '-=3')
-  .to(".icons", {
-    x: 0,
-    duration: 2
-  }, '-=3')
-
-
-
-/*gsap.to(".tran-one", {
-    scrollTrigger: ".tran-one", 
-    x: 500
-  });
-
-  gsap.to(".tran-two", {
-    scrollTrigger: ".tran-two", 
-    x: -500
-  }, );*/
-
-
 
 const tl2 = gsap.timeline({
 
@@ -134,8 +77,9 @@ const tl2 = gsap.timeline({
       start: "-=40%",
       end: "+=40%",
       scrub: true,
-      markers: false
-    }
+      markers: false,
+      onLeaveBack: hideT
+    },
   })
   .to('.tran-one', {
     x: 200,
@@ -151,6 +95,135 @@ const tl2 = gsap.timeline({
   .to('.arrow', {
     autoAlpha: 1
   }, "-=2");
+
+
+
+const tl3 = gsap.timeline({
+
+    scrollTrigger: {
+      trigger: ".sec2",
+      start: "-=100%",
+      end: "+=70%",
+      scrub: 4,
+      markers: false,
+    },
+
+  }).to('.about', {
+    autoAlpha: 0
+  })
+  .to('.avatar', {
+    autoAlpha: 0
+  })
+  .to('.about', {
+    autoAlpha: 1,
+    duration: 2
+  }, )
+  .to('.avatar', {
+    autoAlpha: 1
+  }, "-=2");
+
+
+
+const tl4 = gsap.timeline({
+
+    scrollTrigger: {
+      trigger: ".sec3",
+      start: "-=100%",
+      end: "+=60%",
+      scrub: 5,
+      markers: false,
+    },
+  })
+  .to('.skills-title', {
+    autoAlpha: 0
+  }, "-=5")
+  .to('.line', {
+    autoAlpha: 0
+  }, "-=5")
+  .to('#skill-two-left', {
+    x: -1000
+  }, "-=5")
+  .to('#skill-two-right', {
+    x: 1000
+  }, "-=5")
+  .to('#android', {
+    x: 1000
+  }, "-=5")
+  .to('#java', {
+    x: -1000
+  }, "-=5")
+  .to('.skill-three', {
+    autoAlpha: 0
+  }, "-=5")
+  .to('.skills-title', {
+    autoAlpha: 1
+  }, "-=3")
+  .to('.line', {
+    autoAlpha: 1
+  }, "-=3")
+  .to('#skill-two-left', {
+    x: 0
+  }, "-=2")
+  .to('#skill-two-right', {
+    x: 0
+  }, "-=2")
+  .to('#android', {
+    x: 0
+  }, "-=1")
+  .to('#java', {
+    x: 0
+  }, "-=1")
+  .to('.skill-three', {
+    autoAlpha: 1
+  }, "-=1");
+
+const tl5 = gsap.timeline({
+
+    scrollTrigger: {
+      trigger: ".sec5",
+      start: "-=100%",
+      end: "+=110%",
+      scrub: 2,
+      markers: false,
+    },
+
+  }).to('.model-text', {
+    autoAlpha: 0
+  })
+  .to('.model-text', {
+    autoAlpha: 1
+  });
+
+const tl6 = gsap.timeline({
+
+    scrollTrigger: {
+      trigger: ".sec4",
+      start: "-=40%",
+      end: "+=50%",
+      scrub: 3,
+      markers: false,
+    },
+
+  }).to('.title-projects', {
+    autoAlpha: 0
+  }, "-=3")
+  .to('.blue-circle', {
+    autoAlpha: 0,
+    x: 200
+  }, "-=3")
+  .to('.title-projects', {
+    autoAlpha: 1
+  })
+  .to('.blue-circle', {
+    autoAlpha: 1,
+    rotation: 360,
+    x: 0
+
+  });
+
+
+
+}
 
 
 /*
