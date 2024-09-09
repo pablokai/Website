@@ -875,6 +875,11 @@ canvas {
     padding-top: 12%;
 }
 
+.skill-one img {
+    width: 80%;
+    height: 70%;
+}
+
 .skill-two {
     background-color: #1d212b;
     width: 9vw;
@@ -903,7 +908,7 @@ canvas {
 }
 
 
-.skill-one:hover {
+/* .skill-one:hover {
     height: 10.5vh;
 }
 
@@ -913,7 +918,7 @@ canvas {
 
 .skill-three:hover {
     height: 10.5vh;
-}
+} */
 
 /*SECTION 2*/
 
@@ -1947,12 +1952,13 @@ footer .content {
         background-color: transparent !important;       
         font-size: 10vw;
         padding: 0;
+        border: none;
     }
 
 
     .link-contact:hover {
         color: #fff;
-        border: 1.5px solid #fff;
+        border: none;
         background-color: transparent;
 
     }
