@@ -42,6 +42,7 @@ body {
     /*background: linear-gradient(180deg, rgba(140,146,161,1) 22%, rgba(7,47,193,1) 73%, rgba(7,53,255,1) 100%);*/
     /* background-color: var(--BACK);*/
     /*background-image: linear-gradient(to top, #0c1559, #031b80, #001faa, #0022d4, #0022ff);*/
+    /* overflow-x: hidden; */
 }
 
 
@@ -380,7 +381,7 @@ i {
     color: #fff;
     display: inline-block;
     margin-right: 0px;
-    margin-left: 0;
+    margin-left: -10px;
 }
 
 .email:hover #angle-right {
@@ -1881,8 +1882,6 @@ footer .content {
 }
 
 
-
-
 /*  ********************* MOBILE ***************************************** */
 
 @media (max-width: 800px) {
@@ -2144,7 +2143,6 @@ footer .content {
         width: 3rem;
 
     }
-
 
     .sec2 {
         height: 100%;

@@ -98,7 +98,7 @@
         <div class="icons">
             <a href="https://www.linkedin.com/in/pablo-rodríguez-guzmán-903413223">
                 <i class="fa-brands fa-linkedin fa-3x"></i>
-            <a href="https://github.com/pablokai"><i class="fab fa-github fa-3x"></i> </a>
+            <a href="https://github.com/rgpablocr"><i class="fab fa-github fa-3x"></i> </a>
             <div class="vertical"></div>
         </div>
 
@@ -436,10 +436,9 @@
         container = document.getElementById( 'model' );
 
         elementSize = document.querySelector( '.pic' );
+        camera = new THREE.PerspectiveCamera( 4.5, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 100 );
-
-        camera.position.set( -20, 1, -20 );
+        camera.position.set(0, 10, 20 );
 
         scene = new THREE.Scene();
 
@@ -465,18 +464,14 @@
                 scene.environment = texture;
 
                 render();
-
                 const loader = new GLTFLoader();
                 loader.load( 'scene.gltf', function ( gltf ) {
 
-                    object = gltf.scene;	
+                    object = gltf.scene;
                     object.castShadow = true; 
                     object.receiveShadow = true;
-                    object.scale.set(12,12,12); //was 12 12 12
-                    object.position.set(-9, -5.5, 1);
-
-                   
-
+                    object.scale.set(1,1,1); 
+                    object.position.set(0.6, 0, 1);
                     mixer = new THREE.AnimationMixer( object );
                     var action = mixer.clipAction( gltf.animations[ 0 ] );
                     action.play();
@@ -492,7 +487,6 @@
                         document.querySelector(
                         "body").style.visibility = "visible";
                         startup();
-                        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
                     }, );
 
@@ -503,50 +497,21 @@
         var hlight = new THREE.AmbientLight(0xffd7dd, 0);
         scene.add(hlight);
 
-        /*var hemiLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.2);
-        hemiLight.castShadow = true;
-        scene.add(hemiLight);*/
-
-        /*var spotlight = new THREE.SpotLight(0xD7FFAF,0.2);
-        spotlight.position.set(2000,1000,1000);
-        spotlight.castShadow = true;
-        scene.add( spotlight );*/
-
-        /*var directionalLight = new THREE.DirectionalLight(0xffffff,5);
-        directionalLight.position.set(-50, 4.6, -40 );  
-        directionalLight.castShadow = true;
-        scene.add(directionalLight);*/
-
-       /* const renderScene = new RenderPass( scene, camera );
-        const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ),
-        1.5, 0.4, 0.85 );
-        bloomPass.threshold = 0;
-        bloomPass.strength = 1.5;
-        bloomPass.radius = 0.5;
-        bloomPass.renderToScreen = true;
-
-        composer = new EffectComposer( renderer );
-        composer.addPass( renderScene );
-        composer.addPass( bloomPass );*/
-
-        //window.addEventListener( 'resize', onWindowResize );
+        window.addEventListener( 'resize', onWindowResize);
         document.addEventListener('mousemove', addEvents, false);
-
-        /*stats = new Stats();
-        container.appendChild( stats.dom );*/
 
     }
 
     function onWindowResize() {
-       
-        camera.aspect = elementSize.clientWidth  / elementSize.clientHeight;
+        
+        camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
-        elementSize =  document.querySelector( '.pic' );
-        renderer.setSize( elementSize.clientWidth , elementSize.clientHeight);
-
-        render();
-
+        object.position.x =  0.1;
+        renderer.setSize( elementSize.clientWidth  , elementSize.clientHeight);
+        renderer.render(scene, camera);
+        // object.position.set(0.2, 0, 1);
+        // object.updateMatrix();
     }
 
     function render() {
@@ -557,7 +522,6 @@
 
         if ( mixer ) mixer.update( delta );
         renderer.render(scene, camera);
-       // stats.update();
        
     }
     
@@ -568,7 +532,7 @@
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;     
 
         if(object){
-            object.position.set(mouse.x -9, -mouse.y /2 -5.5 , 1);
+            object.position.set(mouse.x /5 +0.6, mouse.y /5 , 1);
         }
 
     }
@@ -651,7 +615,7 @@
 function init2() {
 let container2 = document.querySelector( '.room-model' );
 
-camera2 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 1000 );
+camera2 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera2.position.set( 0, 0, 500);
 
 scene2 = new THREE.Scene();
@@ -671,14 +635,6 @@ clock2 = new THREE.Clock();
                 const helper2 = new THREE.PointLightHelper(plight);
                 scene2.add(helper2);
 
-               /* const color2 = 0x000000;
-                const intensity2 = 30;
-                const plight2 = new THREE.PointLight(color, intensity);
-                plight2.position.set(200,1000, 1000);
-                plight2.castShadow = true;
-
-                scene2.add(plight2);*/
-
                 const light2 = new THREE.AmbientLight( 0xffffff, 3); 
                 scene2.add( light2 );	
 
@@ -690,7 +646,6 @@ clock2 = new THREE.Clock();
 
 
                 var geometry = new THREE.SphereGeometry(150, 30, 32);
-                /*var material = new THREE.MeshBasicMaterial({ color: 0x300cff});*/
 
                 var material = new THREE.ShaderMaterial({
                 uniforms: {
